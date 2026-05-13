@@ -7,7 +7,7 @@ game_rules: |
   - Après avoir appris combien le joueur A a envoyé, le joueur B décide alors combien, le cas échéant, renvoyer au joueur A. Ce montant retourné n'est pas multiplié et est simplement déduit du total actuel du joueur B et ajouté à celui du joueur A.
   - À la fin du jeu, le montant final du joueur A est ses 10 USD initiaux moins le montant envoyé, plus tout montant retourné par le joueur B. Le montant final du joueur B est ses 10 USD initiaux, plus le montant triplé reçu du joueur A, moins tout montant retourné au joueur A.
 
-# 修改这里来改变玩家A和玩家B的角色
+# Modify here to change the roles of player A and player B
 player_a_role_prefix: "Vous prendrez le rôle du joueur A."
 
 player_a_role_self_parts:
@@ -58,7 +58,7 @@ player_a_role_another_parts:
 
 player_a_question: "Combien d'USD voulez-vous envoyer au joueur B ? Choisissez n'importe quel montant de 0 USD à 10 USD."
 
-# 修改这里来改变玩家A和玩家B的角色
+# Modify here to change the roles of player A and player B
 player_b_role_prefix: "Vous prendrez le rôle du joueur B."
 
 player_b_role_self_parts:
