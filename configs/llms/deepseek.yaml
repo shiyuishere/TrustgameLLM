@@ -1,0 +1,14 @@
+llms:
+  - base_url: "https://api.deepseek.com/v1"
+    api_key: "${DEEPSEEK_API_KEY}"
+    models:
+      - model: "deepseek-chat"
+        mark: "DSV3"
+        concurrency: 10
+      - model: "deepseek-reasoner"
+        mark: "DSR1"
+        concurrency: 20
+    temperatures:
+      - 0.3
+      - 0.5
+      - 0.7

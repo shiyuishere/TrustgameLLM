@@ -1,0 +1,120 @@
+language_mark: "ZH"
+
+game_rules: |
+  你正在与另一名玩家进行游戏。游戏规则如下：
+  - 玩家A和玩家B开始都有10美元。
+  - 玩家A首先决定要向玩家B发送多少钱，可以在0美元到10美元之间任意选择。所发送的金额将从玩家A的总额中扣除，并被三倍化后加到玩家B最初的10美元中。
+  - 在得知玩家A发送的金额后，玩家B将决定是否返还一部分金额给玩家A，以及返还多少。返还的金额不会被三倍化，而是直接从玩家B当前总额中扣除，并加到玩家A的总额中。
+  - 游戏结束时，玩家A的最终金额为其最初的10美元，减去发送给玩家B的金额，再加上玩家B返还的金额。玩家B的最终金额为其最初的10美元，加上从玩家A处收到的三倍金额，减去返还给玩家A的金额。
+
+# 修改这里来改变玩家A和玩家B的角色
+player_a_role_prefix: "你将扮演玩家A的角色。"
+
+player_a_role_self_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "你是一个在中国出生和长大的男人。"
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "你是一个在中国出生和长大的女人。"
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "你是一个在美国出生和长大的男人。"
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "你是一个在美国出生和长大的女人。"
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "你是一个在法国出生和长大的男人。"
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "你是一个在法国出生和长大的女人。"
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_a_role_another_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "玩家B是一个在中国出生和长大的男人。"
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "玩家B是一个在中国出生和长大的女人。"
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "玩家B是一个在美国出生和长大的男人。"
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "玩家B是一个在美国出生和长大的女人。"
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "玩家B是一个在法国出生和长大的男人。"
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "玩家B是一个在法国出生和长大的女人。"
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_a_question: "你想向玩家B发送多少美元？请选择一个0美元到10美元之间的金额。"
+
+# 修改这里来改变玩家A和玩家B的角色
+player_b_role_prefix: "你将扮演玩家B的角色。"
+
+player_b_role_self_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "你是一个在中国出生和长大的男人。"
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "你是一个在中国出生和长大的女人。"
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "你是一个在美国出生和长大的男人。"
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "你是一个在美国出生和长大的女人。"
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "你是一个在法国出生和长大的男人。"
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "你是一个在法国出生和长大的女人。"
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_b_role_another_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "玩家A是一个在中国出生和长大的男人。"
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "玩家A是一个在中国出生和长大的女人。"
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "玩家A是一个在美国出生和长大的男人。"
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "玩家A是一个在美国出生和长大的女人。"
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "玩家A是一个在法国出生和长大的男人。"
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "玩家A是一个在法国出生和长大的女人。"
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_b_question: "你想返还多少美元给玩家A？请选择一个从0美元到你当前总金额之间的数额。"
+
+player_b_history: |
+  玩家A向你发送了{sent_amount}美元。
+  你现在的总金额是{current_total}美元。
+
+format_prompt: |
+  响应格式：
+  - 必须用有效的JSON格式响应
+  - 格式：{"points_to_send": <数字>}
+  - points_to_send必须是整数。

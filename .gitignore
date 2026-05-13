@@ -1,0 +1,33 @@
+# Never upload API keys
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# Office files (optional, to avoid uploading docs/)
+docs/
+*.xlsx
+*.docx
+*.pdf
+
+# Temporary or system files
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+.venv/
+venv/
+
+# Build artifacts
+build/
+dist/
+*.egg-info
+
+# Editor backups
+~$*

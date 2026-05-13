@@ -1,0 +1,17 @@
+llms:
+  - base_url: "https://api.mistral.ai/v1"
+    api_key: "${MISTRAL_API_KEY}"
+    models:
+      - model: "mistral-medium-2505"
+        mark: "MM3"
+        concurrency: 1
+      - model: "open-mistral-nemo"
+        mark: "MN12"
+        concurrency: 1
+      - model: "ministral-8b-2410"
+        mark: "M8B"
+        concurrency: 1
+    temperatures:
+      - 0.3
+      - 0.5
+      - 0.7

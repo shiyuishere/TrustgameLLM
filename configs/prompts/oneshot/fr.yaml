@@ -1,0 +1,120 @@
+language_mark: "FR"
+
+game_rules: |
+  Vous jouez à un jeu avec un autre joueur. Les règles du jeu sont les suivantes :
+  - Le joueur A et le joueur B commencent tous deux avec 10 USD.
+  - Le joueur A décide d'abord combien d'argent envoyer au joueur B, en choisissant n'importe quel montant de 0 USD à 10 USD. Le montant envoyé est déduit du total du joueur A puis triplé et ajouté aux 10 USD initiaux du joueur B.
+  - Après avoir appris combien le joueur A a envoyé, le joueur B décide alors combien, le cas échéant, renvoyer au joueur A. Ce montant retourné n'est pas multiplié et est simplement déduit du total actuel du joueur B et ajouté à celui du joueur A.
+  - À la fin du jeu, le montant final du joueur A est ses 10 USD initiaux moins le montant envoyé, plus tout montant retourné par le joueur B. Le montant final du joueur B est ses 10 USD initiaux, plus le montant triplé reçu du joueur A, moins tout montant retourné au joueur A.
+
+# 修改这里来改变玩家A和玩家B的角色
+player_a_role_prefix: "Vous prendrez le rôle du joueur A."
+
+player_a_role_self_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "Vous êtes un homme né et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "Vous êtes une femme née et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "Vous êtes un homme né et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "Vous êtes une femme née et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "Vous êtes un homme né et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "Vous êtes une femme née et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_a_role_another_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "Le joueur B est un homme né et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "Le joueur B est une femme née et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "Le joueur B est un homme né et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "Le joueur B est une femme née et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "Le joueur B est un homme né et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "Le joueur B est une femme née et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_a_question: "Combien d'USD voulez-vous envoyer au joueur B ? Choisissez n'importe quel montant de 0 USD à 10 USD."
+
+# 修改这里来改变玩家A和玩家B的角色
+player_b_role_prefix: "Vous prendrez le rôle du joueur B."
+
+player_b_role_self_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "Vous êtes un homme né et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "Vous êtes une femme née et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "Vous êtes un homme né et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "Vous êtes une femme née et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "Vous êtes un homme né et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "Vous êtes une femme née et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_b_role_another_parts:
+  - prompt: "" # Unknown
+    nationality_mark: "U"
+    gender_mark: "U"
+  - prompt: "Le joueur A est un homme né et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "M"
+  - prompt: "Le joueur A est une femme née et vivant en Chine."
+    nationality_mark: "ZH"
+    gender_mark: "F"
+  - prompt: "Le joueur A est un homme né et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "M"
+  - prompt: "Le joueur A est une femme née et vivant en Amérique."
+    nationality_mark: "US"
+    gender_mark: "F"
+  - prompt: "Le joueur A est un homme né et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "M"
+  - prompt: "Le joueur A est une femme née et vivant en France."
+    nationality_mark: "FR"
+    gender_mark: "F"
+
+player_b_question: "Combien d'USD voulez-vous renvoyer au joueur A ? Choisissez n'importe quel montant de 0 USD jusqu'à votre total actuel."
+
+player_b_history: |
+  Le joueur A vous a envoyé {sent_amount} USD.
+  Votre montant total est maintenant de {current_total} USD.
+
+format_prompt: |
+  Format de réponse :
+  - Doit répondre avec un JSON valide
+  - Format : {"points_to_send": <nombre>}
+  - Le nombre de points doit être un entier. 

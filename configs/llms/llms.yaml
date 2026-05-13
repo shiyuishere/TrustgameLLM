@@ -1,0 +1,46 @@
+llms:
+  - base_url: "https://api.deepseek.com/v1"
+    api_key: "${DEEPSEEK_API_KEY}"
+    models:
+      - model: "deepseek-chat"
+        mark: "DSV3"
+        concurrency: 10
+      - model: "deepseek-reasoner"
+        mark: "DSR1"
+        concurrency: 20
+    temperatures:
+      - 0.3
+      - 0.5
+      - 0.7
+  - base_url: "https://api.mistral.ai/v1"
+    api_key: "${MISTRAL_API_KEY}"
+    models:
+      - model: "mistral-medium-2505"
+        mark: "MM3"
+        concurrency: 10
+      - model: "open-mistral-nemo"
+        mark: "MN12"
+        concurrency: 10
+      - model: "ministral-8b-2410"
+        mark: "M8B"
+        concurrency: 10
+    temperatures:
+      - 0.3
+      - 0.5
+      - 0.7
+  - base_url: "https://api.openai.com/v1"
+    api_key: "${OPENAI_API_KEY}"
+    models:
+      - model: "gpt-4.1-2025-04-14"
+        mark: "G41"
+        concurrency: 10
+      - model: "gpt-4o-2024-08-06"
+        mark: "G4O"
+        concurrency: 10
+      - model: "gpt-3.5-turbo-0125"
+        mark: "G35T"
+        concurrency: 20
+    temperatures:
+      - 0.3
+      - 0.5
+      - 0.7
