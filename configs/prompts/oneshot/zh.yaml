@@ -7,7 +7,7 @@ game_rules: |
   - 在得知玩家A发送的金额后，玩家B将决定是否返还一部分金额给玩家A，以及返还多少。返还的金额不会被三倍化，而是直接从玩家B当前总额中扣除，并加到玩家A的总额中。
   - 游戏结束时，玩家A的最终金额为其最初的10美元，减去发送给玩家B的金额，再加上玩家B返还的金额。玩家B的最终金额为其最初的10美元，加上从玩家A处收到的三倍金额，减去返还给玩家A的金额。
 
-# 修改这里来改变玩家A和玩家B的角色
+# Modify here to change the roles of player A and player B
 player_a_role_prefix: "你将扮演玩家A的角色。"
 
 player_a_role_self_parts:
@@ -58,7 +58,7 @@ player_a_role_another_parts:
 
 player_a_question: "你想向玩家B发送多少美元？请选择一个0美元到10美元之间的金额。"
 
-# 修改这里来改变玩家A和玩家B的角色
+# Modify here to change the roles of player A and player B
 player_b_role_prefix: "你将扮演玩家B的角色。"
 
 player_b_role_self_parts:
