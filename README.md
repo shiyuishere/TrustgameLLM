@@ -1,21 +1,42 @@
 # Trust Game Experiment
 
-This is a Python-based experiment project implementing a trust game. The project simulates interactions between two players (A and B) in a trust game scenario, with support for multiple languages, nationalities, and gender combinations.
+**Author:** Jiamin Ou, Shiyu Dong
+
+This repository contains a Python-based experimental framework for running trust game interactions between Large Language Models (LLMs) and a simulated human player. The system supports multiple languages, nationalities, genders, and two game versions (One-shot and Repeated).
 
 ## Features
 
-- **Two Game Modes**: OneShot (single round) and Repeated (7 rounds)
-- **Multi-language Support**: Chinese (ZH), English (US), French (FR)
-- **Multi-role Combinations**: Different nationality and gender combinations
-- **LLM Integration**: Support for multiple LLM providers (DeepSeek, OpenAI, Mistral)
-- **Automated Experiments**: Batch processing with configurable concurrency
+- **Two Game Versions**
+  - One-shot (single round)
+  - Repeated (7-round interaction with history tracking)
+
+- **Multi-language Support**
+  - Chinese (ZH)
+  - English (US)
+  - French (FR)
+
+- **Multi-role Combinations**
+  - Gender: Male, Female, Unknown
+  - Nationality: Chinese, American, French, Unknown
+  - Automatically generates all combinations
+
+- **LLM Providers**
+  - DeepSeek
+  - OpenAI
+  - Mistral
+
+- **Batch Executions**
+  - Automatic processing of all role combinations
+  - Configurable concurrency per model
+
 - **Dual Player Roles**: Experiments where LLM acts as Player A or Player B
+
 - **Comprehensive Output**: Detailed CSV results with experiment metadata
 
 ## Requirements
 
 - Python 3.13 or higher
-- uv package manager
+- `uv` package manager
 
 ## Installation Steps
 
@@ -79,19 +100,19 @@ python repeated.py
 ```bash
 usage: oneshot.py [-h] [--llm-config LLM_CONFIG] [--prompt-config PROMPT_CONFIG] [--output OUTPUT] [--num-runs-as-player-a NUM_RUNS_AS_PLAYER_A] [--num-runs-as-player-b-per-amount NUM_RUNS_AS_PLAYER_B_PER_AMOUNT]
 
-运行OneShot Trust Game实验
+Run One-shot Trust Game experiment
 
 options:
   -h, --help            show this help message and exit
   --llm-config LLM_CONFIG
-                        LLM配置文件路径 (默认: configs/llms/llms.yaml)
+                        Path to LLM config (Default: configs/llms/llms.yaml)
   --prompt-config PROMPT_CONFIG
-                        Prompt配置文件路径 (默认: configs/prompts/oneshot/en.yaml)
-  --output OUTPUT       输出CSV文件路径 (默认: results/oneshot_YYYYMMDD_HHMMSS.csv)
+                        Path to prompt config (Default: configs/prompts/oneshot/en.yaml)
+  --output OUTPUT       Output CSV path (Default: results/oneshot_YYYYMMDD_HHMMSS.csv)
   --num-runs-as-player-a NUM_RUNS_AS_PLAYER_A
-                        作为Player A的实验次数 (默认: 1)
+                        Number of experiments when LLMs act as trustor (Default: 1)
   --num-runs-as-player-b-per-amount NUM_RUNS_AS_PLAYER_B_PER_AMOUNT
-                        作为Player B时每个金额的实验次数 (默认: 1)
+                        Number of trials per amount when LLMs act as trustees (Default: 1)
 ```
 
 #### Repeated
@@ -99,19 +120,19 @@ options:
 ```bash
 usage: repeated.py [-h] [--llm-config LLM_CONFIG] [--prompt-config PROMPT_CONFIG] [--output OUTPUT] [--num-runs-as-player-a NUM_RUNS_AS_PLAYER_A] [--num-runs-as-player-b-per-amount NUM_RUNS_AS_PLAYER_B_PER_AMOUNT]
 
-运行Repeated Trust Game实验
+Run Repeated Trust Game Experiment
 
 options:
   -h, --help            show this help message and exit
   --llm-config LLM_CONFIG
-                        LLM配置文件路径 (默认: configs/llms/llms.yaml)
+                        
   --prompt-config PROMPT_CONFIG
-                        Prompt配置文件路径 (默认: configs/prompts/repeated/en.yaml)
-  --output OUTPUT       输出CSV文件路径 (默认: results/repeated_YYYYMMDD_HHMMSS.csv)
+                        
+  --output OUTPUT       
   --num-runs-as-player-a NUM_RUNS_AS_PLAYER_A
-                        作为Player A的实验次数 (默认: 1)
+                        
   --num-runs-as-player-b-per-amount NUM_RUNS_AS_PLAYER_B_PER_AMOUNT
-                        作为Player B时每个金额的实验次数 (默认: 1)
+                        
 ```
 
 ### Prompt Configuration
@@ -282,3 +303,4 @@ The system includes robust error handling:
 - Adjust concurrency settings based on your API rate limits
 - Use faster models for initial testing
 - Monitor API costs when running large-scale experiments
+
