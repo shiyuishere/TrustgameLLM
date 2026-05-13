@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-实验状态检查工具
-用于检查OneShotGame实验的完成状态，识别未完成和重复的实验
+Experiment Status Check Tool
+Used to check the completion status of OneShotGame experiments, identifying incomplete and duplicate experiments.
 """
 
 import os
@@ -17,31 +17,31 @@ from trustgame2 import OneShotGame, RepeatedGame, LLMsConfig
 # Load environment variables
 load_dotenv()
 
-# TODO: 修改这里！！！
+# TODO: change initial trust level
 SENT_AMOUNTS = [0, 2, 5, 8, 10]
 
 
 class ExperimentChecker:
-    """实验状态检查器"""
+    """Experimental Status Inspector"""
 
     def __init__(self, llm_config_path: str, prompt_config_path: str):
         self.llm_config_path = llm_config_path
         self.prompt_config_path = prompt_config_path
         self.llms_config = LLMsConfig.from_yaml(llm_config_path)
-        self.game_type = None  # 将在分析文件时自动检测
+        self.game_type = None  # Automatic detection will be performed during file analysis
 
     def detect_game_type(self, output_file: str) -> str:
-        """根据CSV文件的列数自动检测游戏类型"""
+        """Automatically detect game type based on the number of columns in the CSV file"""
         if not os.path.exists(output_file):
-            # 默认返回oneshot，用户可以通过参数指定
+            # The default value is one-shot, but users can specify a different value via parameters
             return "oneshot"
 
         try:
-            df = pd.read_csv(output_file, nrows=1)  # 只读取第一行来检查列数
+            df = pd.read_csv(output_file, nrows=1)  # Read only the first row to check the number of columns
             columns = df.columns.tolist()
 
-            # OneShotGame的典型列: experiment_id, game_round, a_init, b_init, a_sent, b_received, b_returned, a_final, b_final
-            # RepeatedGame的典型列: experiment_id, game_round, a_init_1, b_init_1, a_sent_1, ..., a_final_7, b_final_7
+            # OneShotGame: experiment_id, game_round, a_init, b_init, a_sent, b_received, b_returned, a_final, b_final
+            # RepeatedGame: experiment_id, game_round, a_init_1, b_init_1, a_sent_1, ..., a_final_7, b_final_7
 
             if any("_1" in col for col in columns) and any(
                 "_7" in col for col in columns
@@ -50,21 +50,21 @@ class ExperimentChecker:
             elif "a_init" in columns and "b_init" in columns:
                 return "oneshot"
             else:
-                print(f"警告: 无法识别游戏类型，列名: {columns[:10]}...")
-                return "oneshot"  # 默认
+                print(f"Warning: Game type not recognized, column name: {columns[:10]}...")
+                return "oneshot"  # default
 
         except Exception as e:
-            print(f"警告: 检测游戏类型失败: {e}")
-            return "oneshot"  # 默认
+            print(f"Warning: Game type detection failed: {e}")
+            return "oneshot"  # default
 
     def get_all_expected_oneshot_experiments(self) -> Set[str]:
-        """获取所有预期的OneShotGame实验ID（dry-run模式）"""
+        """Retrieve all expected OneShotGame experiment IDs (dry-run mode)"""
         all_experiment_ids = set()
 
         for llm_config in self.llms_config.to_llm_configs():
             game = OneShotGame(llm_config, self.prompt_config_path)
 
-            # 获取Player A的实验ID
+            # Get Player A's Experiment ID
             prompts_a = game._prompts.to_one_shot_prompts("A")
             for prompt in prompts_a:
                 from trustgame2.oneshot_game import OneShotGameState
@@ -81,7 +81,7 @@ class ExperimentChecker:
                 )
                 all_experiment_ids.add(state.experiment_id)
 
-            # 获取Player B的实验ID
+            #Get Player B's Experiment ID
             prompts_b = game._prompts.to_one_shot_prompts("B")
             for prompt in prompts_b:
                 for sent_amount in SENT_AMOUNTS:
@@ -98,20 +98,20 @@ class ExperimentChecker:
                         temperature_mark=llm_config.to_temperature_mark(),
                         player_a_sent=sent_amount,
                     )
-                    # 对于Player B的实验，需要包含sent_amount信息
+                    # For Player B's experiment, the sent_amount information needs to be included
                     unique_id = f"{state.experiment_id}_SENT_{sent_amount}"
                     all_experiment_ids.add(unique_id)
 
         return all_experiment_ids
 
     def get_all_expected_repeated_experiments(self) -> Set[str]:
-        """获取所有预期的RepeatedGame实验ID（dry-run模式）"""
+        """Retrieve all expected RepeatedGame experiment IDs (dry-run mode)"""
         all_experiment_ids = set()
 
         for llm_config in self.llms_config.to_llm_configs():
             game = RepeatedGame(llm_config, self.prompt_config_path)
 
-            # 获取Player A的实验ID
+            # Get Player A's Experiment ID
             prompts_a = game._prompts.to_repeated_prompts("A")
             for prompt in prompts_a:
                 from trustgame2.repeated_game import RepeatedGameState
@@ -128,7 +128,7 @@ class ExperimentChecker:
                 )
                 all_experiment_ids.add(state.experiment_id)
 
-            # 获取Player B的实验ID（对于每个sent_amount从0到10）
+            # Get Player B's experiment ID (from 0 to 10 for each send_amount)
             prompts_b = game._prompts.to_repeated_prompts("B")
             for prompt in prompts_b:
                 for sent_amount in SENT_AMOUNTS:
@@ -144,34 +144,34 @@ class ExperimentChecker:
                         llm_model_mark=llm_config.to_model_mark(),
                         temperature_mark=llm_config.to_temperature_mark(),
                     )
-                    # 对于Player B的实验，需要包含sent_amount信息
+                    # For Player B's experiment, the sent_amount information needs to be included
                     unique_id = f"{state.experiment_id}_SENT_{sent_amount}"
                     all_experiment_ids.add(unique_id)
 
         return all_experiment_ids
 
     def get_all_expected_experiments(self, game_type: str) -> Set[str]:
-        """根据游戏类型获取所有预期的实验ID（dry-run模式）"""
+        """Retrieve all expected experiment IDs based on game type (dry-run mode)"""
         if game_type == "oneshot":
             return self.get_all_expected_oneshot_experiments()
         elif game_type == "repeated":
             return self.get_all_expected_repeated_experiments()
         else:
-            raise ValueError(f"不支持的游戏类型: {game_type}")
+            raise ValueError(f"Unsupported game types: {game_type}")
 
     def analyze_output_file(self, output_file: str) -> Tuple[List[str], Counter]:
-        """分析输出文件，返回已完成的实验ID和实验计数"""
+        """Analyze the output file to return the completed experiment IDs and experiment counts"""
         if not os.path.exists(output_file):
-            print(f"警告: 输出文件 {output_file} 不存在")
+            print(f"Warning: Output file {output_file} does not exist")
             return set(), Counter()
 
         try:
             df = pd.read_csv(output_file)
             if "experiment_id" not in df.columns:
-                print(f"错误: 输出文件 {output_file} 缺少 'experiment_id' 列")
+                print(f"Error: Output file {output_file} lacks 'experiment_id' ")
                 return set(), Counter()
 
-            # 对于Player B的实验，需要结合experiment_id和sent_amount来生成唯一标识符
+            # For Player B's experiment, it is necessary to combine experiment_id and send_amount to generate a unique identifier
             completed_ids = []
             id_counts = Counter()
 
@@ -179,23 +179,23 @@ class ExperimentChecker:
                 exp_id = str(row["experiment_id"])
 
                 if exp_id.startswith("B_"):
-                    # Player B的实验需要考虑sent_amount
+                    # Player B's experiment needs to consider send_amount
                     if self.game_type == "oneshot":
-                        # OneShotGame: 使用a_sent字段
+                        # OneShotGame: Use the a_sent field
                         if "a_sent" in df.columns:
                             sent_amount = row["a_sent"]
                             unique_id = f"{exp_id}_SENT_{sent_amount}"
                         else:
                             unique_id = exp_id
                     else:
-                        # RepeatedGame: 使用第一轮的a_sent_1字段
+                        # RepeatedGame:Use the a_sent_1 field from the first round
                         if "a_sent_1" in df.columns:
                             sent_amount = row["a_sent_1"]
                             unique_id = f"{exp_id}_SENT_{sent_amount}"
                         else:
                             unique_id = exp_id
                 else:
-                    # Player A的实验直接使用experiment_id
+                    # Player A's experiment directly uses experiment_id
                     unique_id = exp_id
 
                 completed_ids.append(unique_id)
@@ -204,40 +204,40 @@ class ExperimentChecker:
             return completed_ids, id_counts
 
         except Exception as e:
-            print(f"错误: 读取输出文件失败: {e}")
+            print(f"Error: Failed to read output file: {e}")
             return set(), Counter()
 
     def generate_report(self, output_file: str) -> Dict:
-        """生成实验状态报告"""
-        print("=== 开始分析实验状态 ===")
-        print(f"LLM配置文件: {self.llm_config_path}")
-        print(f"Prompt配置文件: {self.prompt_config_path}")
-        print(f"输出文件: {output_file}")
+        """Generate experimental status report"""
+        print("=== Start analyzing the experimental status ===")
+        print(f"LLM configuration file: {self.llm_config_path}")
+        print(f"Promptconfiguration file: {self.prompt_config_path}")
+        print(f"Output file: {output_file}")
 
-        # 检测游戏类型
+        # check game type
         self.game_type = self.detect_game_type(output_file)
-        print(f"检测到的游戏类型: {self.game_type.upper()}")
+        print(f"Detected game type: {self.game_type.upper()}")
         print()
 
-        # 获取所有预期实验
-        print("获取所有预期实验...")
+        # Obtain all expected experiments
+        print("Obtaining all expected experiments...")
         expected_experiments = self.get_all_expected_experiments(self.game_type)
-        print(f"预期实验总数: {len(expected_experiments)}")
+        print(f"Total number of experiments expected: {len(expected_experiments)}")
 
-        # 分析输出文件
-        print("分析输出文件...")
+        # Analyse output file
+        print("Analysing output file...")
         completed_experiments, experiment_counts = self.analyze_output_file(output_file)
-        print(f"已完成实验总数: {len(completed_experiments)}")
+        print(f"Total number of experiments completed: {len(completed_experiments)}")
 
-        # 找出未完成的实验
+        # Identify unfinished experiments
         missing_experiments = expected_experiments - set(completed_experiments)
 
-        # 找出重复的实验
+        # Find duplicate experiments
         duplicated_experiments = {
             exp_id: count for exp_id, count in experiment_counts.items() if count > 1
         }
 
-        # 统计信息
+        # Statistical information
         report = {
             "game_type": self.game_type,
             "expected_total": len(expected_experiments),
@@ -256,127 +256,127 @@ class ExperimentChecker:
         return report
 
     def print_report(self, report: Dict):
-        """打印报告到屏幕"""
+        """Print"""
         print("\n" + "=" * 80)
-        print("实验状态报告")
+        print("Experimental Status Report告")
         print("=" * 80)
 
-        print(f"游戏类型: {report['game_type'].upper()}")
-        print(f"预期实验总数: {report['expected_total']}")
+        print(f"Game type: {report['game_type'].upper()}")
+        print(f"Expected total number: {report['expected_total']}")
         print(
-            f"已完成实验数（含不在预期实验内的以及重复实验）: {report['completed_total']}"
+            f"Number of completed experiments (including those not included in the initial experiment and duplicate experiments): {report['completed_total']}"
         )
-        print(f"预期实验列表中未完成实验数: {report['missing_total']}")
-        print(f"重复实验数（含不在预期实验内）: {report['duplicated_total']}")
-        print(f"完成率: {report['completion_rate']:.2f}%")
+        print(f"Number of uncompleted experiments in the expected experiment list: {report['missing_total']}")
+        print(f"Number of repeated experiments (including those not included in the expected experiments): {report['duplicated_total']}")
+        print(f"Finished rate: {report['completion_rate']:.2f}%")
         print()
 
         if report["missing_experiments"]:
-            print("未完成的实验:")
+            print("Unfinished experiments:")
             print("-" * 40)
             for i, exp_id in enumerate(report["missing_experiments"], 1):
                 print(f"{i:4d}. {exp_id}")
             print()
         else:
-            print("✅ 所有预期实验都已完成!")
+            print("All anticipated experiments have been completed!")
             print()
 
         if report["duplicated_experiments"]:
-            print("重复的实验:")
+            print("eplication experiments:")
             print("-" * 40)
             for i, (exp_id, count) in enumerate(
                 report["duplicated_experiments"].items(), 1
             ):
-                print(f"{i:4d}. {exp_id} (重复 {count} 次)")
+                print(f"{i:4d}. {exp_id} (Repeated {count} times)")
             print()
         else:
-            print("✅ 没有发现重复实验!")
+            print("No replication experiments were found!")
             print()
 
         print("=" * 80)
 
     def save_report_to_file(self, report: Dict, report_file: str):
-        """保存报告到文件"""
+        """Save report into file"""
         try:
             with open(report_file, "w", encoding="utf-8") as f:
-                f.write("实验状态报告\n")
+                f.write("Experimental Status Report\n")
                 f.write("=" * 80 + "\n")
-                f.write(f"生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-                f.write(f"游戏类型: {report['game_type'].upper()}\n")
-                f.write(f"预期实验总数: {report['expected_total']}\n")
+                f.write(f"Generation time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"Game type: {report['game_type'].upper()}\n")
+                f.write(f"Total number of experiments expected: {report['expected_total']}\n")
                 f.write(
-                    f"已完成实验数（含不在预期实验内的以及重复实验）: {report['completed_total']}\n"
+                    f"Number of completed experiments (including those not included in the initial experiment and duplicate experiments): {report['completed_total']}\n"
                 )
-                f.write(f"预期实验列表中未完成实验数: {report['missing_total']}\n")
+                f.write(f"Number of uncompleted experiments in the expected experiment list: {report['missing_total']}\n")
                 f.write(
-                    f"重复实验数（含不在预期实验内）: {report['duplicated_total']}\n"
+                    f"Number of repeated experiments (including those not included in the expected experiments): {report['duplicated_total']}\n"
                 )
-                f.write(f"完成率: {report['completion_rate']:.2f}%\n")
+                f.write(f"Finished rate: {report['completion_rate']:.2f}%\n")
                 f.write("\n")
 
                 if report["missing_experiments"]:
-                    f.write("未完成的实验:\n")
+                    f.write("Unfinished experiments:\n")
                     f.write("-" * 40 + "\n")
                     for i, exp_id in enumerate(report["missing_experiments"], 1):
                         f.write(f"{i:4d}. {exp_id}\n")
                     f.write("\n")
                 else:
-                    f.write("✅ 所有预期实验都已完成!\n\n")
+                    f.write("All anticipated experiments have been completed!\n\n")
 
                 if report["duplicated_experiments"]:
-                    f.write("重复的实验:\n")
+                    f.write("Replication experiments:\n")
                     f.write("-" * 40 + "\n")
                     for i, (exp_id, count) in enumerate(
                         report["duplicated_experiments"].items(), 1
                     ):
-                        f.write(f"{i:4d}. {exp_id} (重复 {count} 次)\n")
+                        f.write(f"{i:4d}. {exp_id} (Repeat {count} times)\n")
                     f.write("\n")
                 else:
-                    f.write("✅ 没有发现重复实验!\n\n")
+                    f.write("No replication experiments were found!\n\n")
 
                 f.write("=" * 80 + "\n")
 
-            print(f"报告已保存到: {report_file}")
+            print(f"The report has been saved to: {report_file}")
 
         except Exception as e:
-            print(f"错误: 保存报告失败: {e}")
+            print(f"Error: Failed to save report: {e}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="检查OneShot Trust Game实验状态")
-    parser.add_argument("--result", required=True, help="要检查的输出CSV文件路径")
+    parser = argparse.ArgumentParser(description=" Check OneShot Trust Game experiment status")
+    parser.add_argument("--result", required=True, help="The path to the output CSV file to check")
     parser.add_argument(
         "--llm-config",
         default="configs/llms/llms.yaml",
-        help="LLM配置文件路径 (默认: configs/llms/llms.yaml)",
+        help="LLM configuration file path (Default: configs/llms/llms.yaml)",
     )
     parser.add_argument(
         "--prompt-config",
         required=True,
-        help="Prompt配置文件路径",
+        help="Prompt configuration file path",
     )
     parser.add_argument(
         "--report-file",
         default=None,
-        help="报告输出文件路径",
+        help="Report output file path",
     )
 
     args = parser.parse_args()
 
-    # 生成默认报告文件名，使用与输入的CSV文件相同的目录
+    # Generate a default report file name, using the same directory as the input CSV file.
     if args.report_file is None:
         args.report_file = args.result + ".report.txt"
 
-    # 创建检查器
+    # create checker
     checker = ExperimentChecker(args.llm_config, args.prompt_config)
 
-    # 生成报告
+    # generate report
     report = checker.generate_report(args.result)
 
-    # 打印报告
+    # print report
     checker.print_report(report)
 
-    # 保存报告
+    # save report
     checker.save_report_to_file(report, args.report_file)
 
 
